@@ -3,7 +3,9 @@ def test_list_products(client):
     assert r.status_code == 200
     data = r.json()
     assert "items" in data
+    assert "total" in data
     assert len(data["items"]) == 1
+    assert data["total"] == 1
 
 
 def test_list_products_filter_brand(client):

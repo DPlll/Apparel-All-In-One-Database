@@ -56,7 +56,7 @@ def init_db(conn: sqlite3.Connection) -> None:
 
 
 def get_connection(db_path: str) -> sqlite3.Connection:
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(db_path, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     init_db(conn)
     return conn
@@ -127,6 +127,30 @@ def get_products(
     return [_row_to_dict(r) for r in rows]
 
 
+def count_products(
+    conn: sqlite3.Connection,
+    brand: Optional[str] = None,
+    style: Optional[str] = None,
+    color: Optional[str] = None,
+    size: Optional[str] = None,
+    min_price: Optional[float] = None,
+    max_price: Optional[float] = None,
+    in_stock: Optional[bool] = None,
+) -> int:
+    conditions = []
+    params = []
+    if brand:       conditions.append("brand_slug = ?");   params.append(brand)
+    if style:       conditions.append("style = ?");        params.append(style)
+    if color:       conditions.append("colors LIKE ?");    params.append(f'%"{color}"%')
+    if size:        conditions.append("sizes LIKE ?");     params.append(f'%"{size}"%')
+    if min_price is not None: conditions.append("price >= ?"); params.append(min_price)
+    if max_price is not None: conditions.append("price <= ?"); params.append(max_price)
+    if in_stock is not None:  conditions.append("in_stock = ?"); params.append(int(in_stock))
+    where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+    row = conn.execute(f"SELECT COUNT(*) FROM products {where}", params).fetchone()
+    return row[0]
+
+
 def get_product_by_id(conn: sqlite3.Connection, product_id: str) -> dict | None:
     row = conn.execute("SELECT * FROM products WHERE id = ?", (product_id,)).fetchone()
     return _row_to_dict(row) if row else None
@@ -141,14 +165,15 @@ def get_brands(conn: sqlite3.Connection) -> list[dict]:
 
 
 def search_products(conn: sqlite3.Connection, query: str, limit: int = 24) -> list[dict]:
-    # content=products FTS5 table: join on rowid, not on id column
+    # Wrap in double quotes for FTS5 phrase search — prevents syntax errors on bare operators
+    safe_query = f'"{query}"'
     rows = conn.execute("""
         SELECT p.* FROM products p
         WHERE p.rowid IN (
             SELECT rowid FROM products_fts WHERE products_fts MATCH ?
         )
         LIMIT ?
-    """, (query, limit)).fetchall()
+    """, (safe_query, limit)).fetchall()
     return [_row_to_dict(r) for r in rows]
 
 

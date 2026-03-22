@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import Optional
 from api.deps import get_db
-from pipeline.database import get_products, get_product_by_id
+from pipeline.database import get_products, get_product_by_id, count_products
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -34,7 +34,9 @@ async def list_products(
         limit=limit,
         offset=offset,
     )
-    return {"items": items, "page": page, "per_page": limit}
+    total = count_products(db, brand=brand, style=style, color=color, size=size,
+                           min_price=min_price, max_price=max_price, in_stock=in_stock)
+    return {"items": items, "page": page, "per_page": limit, "total": total}
 
 
 @router.get("/{product_id}")
