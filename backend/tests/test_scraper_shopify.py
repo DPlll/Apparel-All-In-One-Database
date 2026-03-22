@@ -126,6 +126,27 @@ def test_scrape_deduplicates_colors():
     assert colors.count("Black") == 1
 
 
+def test_all_six_brands_configured():
+    from pipeline.scrapers.brand_configs import SHOPIFY_BRANDS
+    expected_slugs = {
+        "frankies-bikinis",
+        "monday-swimwear",
+        "mikoh",
+        "maaji",
+        "kulani-kinis",
+        "hunza-g",
+    }
+    assert expected_slugs == set(SHOPIFY_BRANDS.keys())
+
+
+def test_each_brand_has_required_keys():
+    from pipeline.scrapers.brand_configs import SHOPIFY_BRANDS
+    for slug, cfg in SHOPIFY_BRANDS.items():
+        assert "brand" in cfg, f"{slug} missing 'brand'"
+        assert "domain" in cfg, f"{slug} missing 'domain'"
+        assert "." in cfg["domain"], f"{slug} domain looks wrong"
+
+
 def test_scrape_paginates():
     product_a = {**FAKE_PRODUCT, "id": 1, "variants": [{**FAKE_PRODUCT["variants"][0], "sku": "A"}]}
     product_b = {**FAKE_PRODUCT, "id": 2, "handle": "other", "variants": [{**FAKE_PRODUCT["variants"][0], "sku": "B"}]}
