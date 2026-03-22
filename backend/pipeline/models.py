@@ -13,14 +13,11 @@ class Product:
     image_url: str
     affiliate_url: str
     style: str          # top / bottom / set / one-piece
-    colors: list
-    sizes: list
+    colors: list[str]
+    sizes: list[str]
     in_stock: bool
     sale_price: Optional[float] = None
     updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def to_dict(self) -> dict:
-        d = asdict(self)
-        d["colors"] = self.colors
-        d["sizes"] = self.sizes
-        return d
+        return asdict(self)
