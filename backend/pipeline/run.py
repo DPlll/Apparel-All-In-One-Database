@@ -17,36 +17,40 @@ def run_pipeline(db_path: str) -> dict:
     conn = get_connection(db_path)
     summary = {"brands_processed": 0, "products_upserted": 0, "errors": []}
 
-    for brand_cfg in BRANDS:
-        brand = brand_cfg["brand"]
-        try:
-            feed_url = brand_cfg.get("feed_url", "")
-            if not feed_url:
-                print(f"[SKIP] {brand} — no feed_url configured")
-                continue
+    try:
+        for brand_cfg in BRANDS:
+            brand = brand_cfg["brand"]
+            try:
+                feed_url = brand_cfg.get("feed_url", "")
+                if not feed_url:
+                    print(f"[SKIP] {brand} — no feed_url configured")
+                    continue
 
-            print(f"[FETCH] {brand}")
-            filepath = download_feed(feed_url)
-            products = parse_csv_feed(
-                filepath=filepath,
-                brand=brand,
-                affiliate_prefix=brand_cfg["affiliate_prefix"],
-                column_map=brand_cfg["column_map"],
-            )
-            os.unlink(filepath)
+                print(f"[FETCH] {brand}")
+                filepath = download_feed(feed_url)
+                try:
+                    products = parse_csv_feed(
+                        filepath=filepath,
+                        brand=brand,
+                        affiliate_prefix=brand_cfg["affiliate_prefix"],
+                        column_map=brand_cfg["column_map"],
+                    )
+                finally:
+                    os.unlink(filepath)
 
-            for p in products:
-                upsert_product(conn, p)
+                for p in products:
+                    upsert_product(conn, p)
 
-            summary["brands_processed"] += 1
-            summary["products_upserted"] += len(products)
-            print(f"[OK] {brand} — {len(products)} products")
+                summary["brands_processed"] += 1
+                summary["products_upserted"] += len(products)
+                print(f"[OK] {brand} — {len(products)} products")
 
-        except Exception as e:
-            summary["errors"].append({"brand": brand, "error": str(e)})
-            print(f"[ERR] {brand} — {e}")
+            except Exception as e:
+                summary["errors"].append({"brand": brand, "error": str(e)})
+                print(f"[ERR] {brand} — {e}")
+    finally:
+        conn.close()
 
-    conn.close()
     return summary
 
 if __name__ == "__main__":
