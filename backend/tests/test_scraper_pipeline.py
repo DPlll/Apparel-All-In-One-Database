@@ -24,9 +24,9 @@ def test_run_pipeline_uses_scraper_when_no_feed_url(tmp_path):
         mock_scrape.return_value = [FAKE_PRODUCT]
         summary = run_pipeline(db_path)
 
-    # All 6 brands have no feed_url, so scraper should be called 6 times
-    assert mock_scrape.call_count == 6
-    assert summary["products_upserted"] == 6
+    # 4 brands have scrape_via set (MIKOH and Maaji are skipped — not Shopify stores)
+    assert mock_scrape.call_count == 4
+    assert summary["products_upserted"] == 4
 
 
 def test_run_pipeline_skips_scraper_when_feed_url_present(tmp_path):

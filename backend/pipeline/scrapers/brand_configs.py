@@ -11,14 +11,6 @@ SHOPIFY_BRANDS: dict[str, dict] = {
         "brand": "Monday Swimwear",
         "domain": "www.mondayswimwear.com",
     },
-    "mikoh": {
-        "brand": "MIKOH",
-        "domain": "www.mikoh.com",
-    },
-    "maaji": {
-        "brand": "Maaji",
-        "domain": "www.maaji.com",
-    },
     "kulani-kinis": {
         "brand": "Kulani Kinis",
         "domain": "www.kulanikinis.com",
@@ -27,4 +19,7 @@ SHOPIFY_BRANDS: dict[str, dict] = {
         "brand": "Hunza G",
         "domain": "www.hunzag.com",
     },
+    # MIKOH uses WordPress (not Shopify) — /products.json returns HTML
+    # Maaji returns 404 for /products.json — not a standard Shopify storefront
+    # Both brands pending custom scraper implementation
 }

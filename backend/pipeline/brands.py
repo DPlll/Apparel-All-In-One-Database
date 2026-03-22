@@ -29,7 +29,7 @@ BRANDS = [
     {
         "brand": "MIKOH",
         "brand_slug": "mikoh",
-        "scrape_via": "shopify",
+        "scrape_via": "",  # WordPress store — no /products.json; needs custom scraper
         "affiliate_prefix": "",
         "feed_url": "",
         "column_map": {},
@@ -37,7 +37,7 @@ BRANDS = [
     {
         "brand": "Maaji",
         "brand_slug": "maaji",
-        "scrape_via": "shopify",
+        "scrape_via": "",  # Not a standard Shopify storefront; needs custom scraper
         "affiliate_prefix": "",
         "feed_url": "",
         "column_map": {},

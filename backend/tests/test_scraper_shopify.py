@@ -126,13 +126,12 @@ def test_scrape_deduplicates_colors():
     assert colors.count("Black") == 1
 
 
-def test_all_six_brands_configured():
+def test_shopify_brands_configured():
     from pipeline.scrapers.brand_configs import SHOPIFY_BRANDS
+    # MIKOH (WordPress) and Maaji (non-Shopify) are excluded from Shopify configs
     expected_slugs = {
         "frankies-bikinis",
         "monday-swimwear",
-        "mikoh",
-        "maaji",
         "kulani-kinis",
         "hunza-g",
     }
