@@ -1,65 +1,74 @@
-import Image from "next/image";
+import Link from "next/link";
+import { fetchBrands, fetchProducts } from "@/lib/api";
+import ProductCard from "@/components/ProductCard";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const [brandsData, productsData] = await Promise.all([
+    fetchBrands(),
+    fetchProducts({ sort: "newest", page: 1 }),
+  ]);
+
+  const brands = brandsData.slice(0, 12);
+  const newArrivals = productsData.items.slice(0, 8);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <>
+      {/* Hero */}
+      <section className="pt-24 pb-20 px-4 text-center bg-sand-50">
+        <p className="text-[11px] uppercase tracking-[0.25em] text-stone-400 mb-5">
+          The best in women&apos;s swimwear
+        </p>
+        <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl text-stone-900 leading-tight mb-6">
+          Every brand.<br className="hidden sm:block" /> One place.
+        </h1>
+        <p className="text-base text-stone-400 mb-10 max-w-sm mx-auto leading-relaxed">
+          Browse top swimwear labels and shop directly on their site.
+        </p>
+        <Link
+          href="/catalog"
+          className="inline-block px-10 py-3 border border-stone-900 text-stone-900 text-xs tracking-widest uppercase hover:bg-stone-900 hover:text-white transition-colors duration-200"
+        >
+          Shop All
+        </Link>
+      </section>
+
+      {/* Thin divider */}
+      <div className="h-px bg-sand-200 mx-6" />
+
+      {/* Brands strip */}
+      <section className="max-w-5xl mx-auto px-6 py-12">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-stone-400 mb-6 text-center">
+          Featured Brands
+        </p>
+        <div className="flex flex-wrap justify-center gap-2">
+          {brands.map((b) => (
+            <Link
+              key={b.brand_slug}
+              href={`/brands/${b.brand_slug}`}
+              className="px-4 py-1.5 border border-sand-300 text-xs tracking-wide text-stone-600 hover:border-rose-400 hover:text-rose-500 transition-colors rounded-full"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              {b.brand}
+            </Link>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* New arrivals */}
+      <section className="max-w-5xl mx-auto px-6 pb-20">
+        <div className="flex items-baseline justify-between mb-8">
+          <h2 className="font-serif text-2xl text-stone-900">New Arrivals</h2>
+          <Link href="/catalog" className="text-[11px] uppercase tracking-widest text-stone-400 hover:text-rose-500 transition-colors">
+            View all →
+          </Link>
         </div>
-      </main>
-    </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
+          {newArrivals.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
