@@ -1,0 +1,3 @@
+sku,name,price,sale_price,image_url,buy_url,category,colors,sizes
+SKU001,Malibu Triangle Top,98.00,,https://img.com/1.jpg,https://buy.com/1,bikini-top,"black,white","XS,S,M,L"
+SKU002,Monaco Bottom,78.00,60.00,https://img.com/2.jpg,https://buy.com/2,bikini-bottom,"blue","S,M,L"
