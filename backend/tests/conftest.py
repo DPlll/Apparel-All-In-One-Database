@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 from pipeline.database import init_db, upsert_product
 from pipeline.models import Product
 from api.main import app
+from api.deps import get_db
 
 
 @pytest.fixture
@@ -35,6 +36,7 @@ def sample_product():
 @pytest.fixture
 def client(mem_db, sample_product):
     upsert_product(mem_db, sample_product)
-    app.state.db = mem_db
+    app.dependency_overrides[get_db] = lambda: mem_db
     with TestClient(app) as c:
         yield c
+    app.dependency_overrides.clear()
