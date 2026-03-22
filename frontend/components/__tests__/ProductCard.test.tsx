@@ -1,4 +1,3 @@
-import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import ProductCard from "../ProductCard";
 import type { Product } from "@/types/product";

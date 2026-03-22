@@ -33,7 +33,7 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "jsdom",
-    "setupFilesAfterFramework": ["@testing-library/jest-dom"],
+    "setupFilesAfterEnv": ["@testing-library/jest-dom"],
     "moduleNameMapper": {
       "^@/(.*)$": "<rootDir>/$1",
       "^next/image$": "<rootDir>/__mocks__/next-image.tsx",
