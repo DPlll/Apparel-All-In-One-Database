@@ -1,5 +1,6 @@
 import sqlite3
 import json
+from typing import Optional
 from pipeline.models import Product
 
 SCHEMA = """
@@ -41,13 +42,15 @@ CREATE TRIGGER IF NOT EXISTS products_fts_au AFTER UPDATE ON products BEGIN
 END;
 CREATE TABLE IF NOT EXISTS clicks (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    product_id TEXT NOT NULL,
+    product_id TEXT NOT NULL REFERENCES products(id),
     clicked_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+CREATE INDEX IF NOT EXISTS idx_clicks_product ON clicks(product_id);
 """
 
 
 def init_db(conn: sqlite3.Connection) -> None:
+    conn.row_factory = sqlite3.Row
     conn.executescript(SCHEMA)
     conn.commit()
 
@@ -65,18 +68,18 @@ def upsert_product(conn: sqlite3.Connection, p: Product) -> None:
     # during upsert and attempts to manipulate FTS rowids that are in flux,
     # causing "SQL logic error". A DELETE followed by INSERT triggers the
     # simpler AFTER DELETE and AFTER INSERT paths which work correctly.
-    conn.execute("DELETE FROM products WHERE id = ?", (p.id,))
-    conn.execute("""
-        INSERT INTO products (id, brand, brand_slug, name, price, sale_price,
-            image_url, affiliate_url, style, colors, sizes, in_stock, updated_at)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-    """, (
-        p.id, p.brand, p.brand_slug, p.name, p.price, p.sale_price,
-        p.image_url, p.affiliate_url, p.style,
-        json.dumps(p.colors), json.dumps(p.sizes),
-        int(p.in_stock), p.updated_at,
-    ))
-    conn.commit()
+    with conn:
+        conn.execute("DELETE FROM products WHERE id = ?", (p.id,))
+        conn.execute("""
+            INSERT INTO products (id, brand, brand_slug, name, price, sale_price,
+                image_url, affiliate_url, style, colors, sizes, in_stock, updated_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+        """, (
+            p.id, p.brand, p.brand_slug, p.name, p.price, p.sale_price,
+            p.image_url, p.affiliate_url, p.style,
+            json.dumps(p.colors), json.dumps(p.sizes),
+            int(p.in_stock), p.updated_at,
+        ))
 
 
 def _row_to_dict(row) -> dict:
@@ -89,12 +92,12 @@ def _row_to_dict(row) -> dict:
 
 def get_products(
     conn: sqlite3.Connection,
-    brand: str = None,
-    style: str = None,
-    color: str = None,
-    size: str = None,
-    min_price: float = None,
-    max_price: float = None,
+    brand: Optional[str] = None,
+    style: Optional[str] = None,
+    color: Optional[str] = None,
+    size: Optional[str] = None,
+    min_price: Optional[float] = None,
+    max_price: Optional[float] = None,
     in_stock: bool = None,
     sort: str = "newest",
     limit: int = 24,
@@ -112,7 +115,10 @@ def get_products(
     if in_stock is not None:  conditions.append("in_stock = ?"); params.append(int(in_stock))
 
     where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
-    order = {"price_asc": "price ASC", "price_desc": "price DESC"}.get(sort, "updated_at DESC")
+    sort_map = {"newest": "updated_at DESC", "price_asc": "price ASC", "price_desc": "price DESC"}
+    if sort not in sort_map:
+        raise ValueError(f"Invalid sort value: {sort!r}. Must be one of: {list(sort_map)}")
+    order = sort_map[sort]
 
     params += [limit, offset]
     rows = conn.execute(

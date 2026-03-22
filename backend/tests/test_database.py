@@ -1,6 +1,6 @@
 import sqlite3
 import pytest
-from pipeline.database import init_db, upsert_product, get_products, get_product_by_id, get_brands
+from pipeline.database import init_db, upsert_product, get_products, get_product_by_id, get_brands, log_click, search_products
 from pipeline.models import Product
 
 @pytest.fixture
@@ -75,10 +75,31 @@ def test_get_brands(db):
     assert "triangl" in slugs
 
 def test_search_finds_product(db):
-    from pipeline.database import search_products
     p = make_product(brand_slug="triangl", sku="99")
     p.name = "Crete Triangle Set"
     upsert_product(db, p)
     results = search_products(db, "Crete")
     assert len(results) == 1
     assert results[0]["name"] == "Crete Triangle Set"
+
+def test_log_click(db):
+    p = make_product()
+    upsert_product(db, p)
+    log_click(db, p.id)
+    row = db.execute("SELECT product_id FROM clicks WHERE product_id = ?", (p.id,)).fetchone()
+    assert row is not None
+
+def test_fts_updates_after_upsert(db):
+    p = make_product(brand_slug="triangl", sku="88")
+    p.name = "Original Name"
+    upsert_product(db, p)
+    # Update the product with a new name
+    p.name = "Updated Name"
+    upsert_product(db, p)
+    # FTS should return the updated name, not the original
+    results = search_products(db, "Updated")
+    assert len(results) == 1
+    assert results[0]["name"] == "Updated Name"
+    # Old name should not appear
+    old = search_products(db, "Original")
+    assert len(old) == 0
