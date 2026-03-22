@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+import NavHeader from "@/components/NavHeader";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const cormorant = Cormorant_Garamond({
@@ -18,7 +19,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
-      <body>{children}</body>
+      <body>
+        <NavHeader />
+        <main>{children}</main>
+        <footer className="mt-20 py-10 border-t border-sand-200 text-center text-xs text-stone-400 tracking-widest uppercase">
+          © 2026 Swim&amp;Co &nbsp;·&nbsp; All links are affiliate links.
+        </footer>
+      </body>
     </html>
   );
 }
