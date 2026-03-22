@@ -8,6 +8,9 @@ def test_normalize_brand_slug():
     assert normalize_brand_slug("Frankies Bikinis") == "frankies-bikinis"
     assert normalize_brand_slug("L*Space") == "l-space"
     assert normalize_brand_slug("Monday Swimwear") == "monday-swimwear"
+    # Test adjacent-hyphen edge cases (Fix 4)
+    assert normalize_brand_slug("Brand - Summer") == "brand-summer"
+    assert normalize_brand_slug("L * Space") == "l-space"
 
 def test_parse_csv_returns_products():
     products = parse_csv_feed(

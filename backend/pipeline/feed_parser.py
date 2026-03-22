@@ -1,14 +1,27 @@
 import csv
 import re
+from typing import Optional
 from pipeline.models import Product
 
 def normalize_brand_slug(brand: str) -> str:
     slug = brand.lower()
-    # Replace non-alphanumeric/space/hyphen with spaces
+    # Replace non-alphanumeric/space/hyphen with space (preserves word boundaries)
     slug = re.sub(r"[^a-z0-9\s-]", " ", slug)
-    # Collapse multiple spaces to single space, then convert to hyphens
+    # Collapse multiple spaces/hyphens to single space, then convert to hyphens
     slug = re.sub(r"\s+", "-", slug.strip())
+    # Clean up any double hyphens that may result from adjacent spaces/hyphens in original
+    slug = re.sub(r"-+", "-", slug)
     return slug
+
+def _get_col(row: dict, col: Optional[str]) -> str:
+    """Safely retrieve an optional column value from a row.
+
+    Returns empty string if col is None (column not in mapping).
+    Avoids reading blank-header columns which can cause data leaks.
+    """
+    if not col:
+        return ""
+    return row.get(col, "").strip()
 
 def _parse_list(value: str) -> list[str]:
     if not value:
@@ -37,12 +50,14 @@ def parse_csv_feed(
             sku        = row.get(column_map["sku"], "").strip()
             name       = row.get(column_map["name"], "").strip()
             price_str  = row.get(column_map["price"], "0").strip()
-            sale_str   = row.get(column_map.get("sale_price", ""), "").strip()
             image_url  = row.get(column_map["image_url"], "").strip()
             buy_url    = row.get(column_map["buy_url"], "").strip()
-            category   = row.get(column_map.get("category", ""), "").strip()
-            colors_raw = row.get(column_map.get("colors", ""), "").strip()
-            sizes_raw  = row.get(column_map.get("sizes", ""), "").strip()
+
+            # Optional columns: use sentinel pattern to avoid reading blank-header columns
+            sale_str   = _get_col(row, column_map.get("sale_price"))
+            category   = _get_col(row, column_map.get("category"))
+            colors_raw = _get_col(row, column_map.get("colors"))
+            sizes_raw  = _get_col(row, column_map.get("sizes"))
 
             if not sku or not name or not buy_url:
                 continue
@@ -71,6 +86,7 @@ def parse_csv_feed(
                 style=_map_style(category),
                 colors=_parse_list(colors_raw),
                 sizes=_parse_list(sizes_raw),
+                # Affiliate feeds don't include stock status; default to True
                 in_stock=True,
             ))
 
