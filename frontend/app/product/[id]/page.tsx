@@ -26,14 +26,14 @@ export default async function ProductPage({ params }: PageProps) {
     <div className="max-w-5xl mx-auto px-6 py-10">
       <Link
         href="/catalog"
-        className="text-[11px] uppercase tracking-widest text-stone-400 hover:text-rose-500 transition-colors mb-8 inline-block"
+        className="text-[11px] uppercase tracking-widest text-drift-400 hover:text-terra-500 transition-colors mb-8 inline-block"
       >
         ← All Swimwear
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Image */}
-        <div className="relative aspect-[3/4] overflow-hidden bg-sand-100 rounded-sm">
+        <div className="relative aspect-[3/4] overflow-hidden bg-vintage-100 rounded-xl">
           <Image
             src={product.image_url}
             alt={product.name}
@@ -49,11 +49,11 @@ export default async function ProductPage({ params }: PageProps) {
           <div>
             <Link
               href={`/brands/${product.brand_slug}`}
-              className="text-[10px] uppercase tracking-[0.25em] text-stone-400 hover:text-rose-500 transition-colors"
+              className="text-[10px] uppercase tracking-[0.25em] text-drift-400 hover:text-terra-500 transition-colors"
             >
               {product.brand}
             </Link>
-            <h1 className="font-serif text-3xl text-stone-900 mt-2 leading-snug">
+            <h1 className="font-serif text-3xl text-drift-900 mt-2 leading-snug">
               {product.name}
             </h1>
           </div>
@@ -62,21 +62,21 @@ export default async function ProductPage({ params }: PageProps) {
           <div className="flex items-baseline gap-3">
             {product.sale_price != null ? (
               <>
-                <span className="text-2xl text-rose-500">${product.sale_price}</span>
-                <span className="text-base text-stone-400 line-through">${product.price}</span>
+                <span className="text-2xl text-terra-500">${product.sale_price}</span>
+                <span className="text-base text-drift-400 line-through">${product.price}</span>
               </>
             ) : (
-              <span className="text-2xl text-stone-800">${product.price}</span>
+              <span className="text-2xl text-drift-900">${product.price}</span>
             )}
           </div>
 
           {/* Sizes */}
           {product.sizes.length > 0 && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 mb-3">Sizes</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-drift-400 mb-3">Sizes</p>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((size) => (
-                  <span key={size} className="px-3 py-1.5 border border-sand-300 text-xs text-stone-600">
+                  <span key={size} className="px-3 py-1.5 border border-vintage-300 text-xs text-drift-600 rounded-sm">
                     {size}
                   </span>
                 ))}
@@ -87,10 +87,10 @@ export default async function ProductPage({ params }: PageProps) {
           {/* Colors */}
           {product.colors.length > 0 && (
             <div>
-              <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 mb-3">Colors</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-drift-400 mb-3">Colors</p>
               <div className="flex flex-wrap gap-2">
                 {product.colors.map((color) => (
-                  <span key={color} className="px-3 py-1.5 border border-sand-300 text-xs text-stone-600 capitalize">
+                  <span key={color} className="px-3 py-1.5 border border-vintage-300 text-xs text-drift-600 capitalize rounded-sm">
                     {color}
                   </span>
                 ))}
@@ -103,7 +103,7 @@ export default async function ProductPage({ params }: PageProps) {
             {product.in_stock ? (
               <ShopButton productId={product.id} brandName={product.brand} />
             ) : (
-              <p className="text-xs uppercase tracking-widest text-stone-400 text-center py-3">
+              <p className="text-xs uppercase tracking-widest text-drift-400 text-center py-3">
                 Out of stock
               </p>
             )}

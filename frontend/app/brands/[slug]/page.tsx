@@ -21,15 +21,15 @@ export default async function BrandPage({ params }: PageProps) {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
-      <div className="mb-10 pb-8 border-b border-sand-200">
-        <h1 className="font-serif text-4xl text-stone-900">{brand.brand}</h1>
-        <p className="text-[11px] uppercase tracking-widest text-stone-400 mt-2">
+      <div className="mb-10 pb-8 border-b border-vintage-200">
+        <h1 className="font-serif text-4xl text-drift-900">{brand.brand}</h1>
+        <p className="text-[11px] uppercase tracking-widest text-drift-400 mt-2">
           {brand.product_count} products
         </p>
       </div>
 
       {productsData.items.length === 0 ? (
-        <p className="text-stone-400 text-center py-20">No products available.</p>
+        <p className="text-drift-400 text-center py-20">No products available.</p>
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10">
           {productsData.items.map((product) => (

@@ -48,9 +48,9 @@ export default function FilterSidebar({ brands }: Props) {
     <aside className="w-full lg:w-48 shrink-0">
       <div className="sticky top-20 space-y-7">
         <div className="flex items-center justify-between">
-          <p className="text-[10px] uppercase tracking-[0.25em] text-stone-400">Refine</p>
+          <p className="text-[10px] uppercase tracking-[0.25em] text-drift-400">Refine</p>
           {hasFilters && (
-            <button onClick={clearAll} className="text-[10px] uppercase tracking-wide text-rose-400 hover:text-rose-600 transition-colors">
+            <button onClick={clearAll} className="text-[10px] uppercase tracking-wide text-terra-400 hover:text-terra-600 transition-colors">
               Clear
             </button>
           )}
@@ -58,7 +58,7 @@ export default function FilterSidebar({ brands }: Props) {
 
         {/* Style */}
         <div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 mb-2.5">Style</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-drift-400 mb-2.5">Style</p>
           <div className="space-y-0.5">
             {STYLES.map(({ label, value }) => (
               <button
@@ -66,8 +66,8 @@ export default function FilterSidebar({ brands }: Props) {
                 onClick={() => setParam("style", value)}
                 className={`block w-full text-left text-sm py-1.5 transition-colors ${
                   currentStyle === value
-                    ? "text-rose-500 font-medium"
-                    : "text-stone-600 hover:text-rose-500"
+                    ? "text-terra-500 font-medium"
+                    : "text-drift-600 hover:text-terra-500"
                 }`}
               >
                 {label}
@@ -78,7 +78,7 @@ export default function FilterSidebar({ brands }: Props) {
 
         {/* Brand */}
         <div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 mb-2.5">Brand</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-drift-400 mb-2.5">Brand</p>
           <div className="space-y-0.5 max-h-56 overflow-y-auto">
             {brands.map((b) => (
               <button
@@ -86,8 +86,8 @@ export default function FilterSidebar({ brands }: Props) {
                 onClick={() => setParam("brand", b.brand_slug)}
                 className={`block w-full text-left text-sm py-1.5 transition-colors ${
                   currentBrand === b.brand_slug
-                    ? "text-rose-500 font-medium"
-                    : "text-stone-600 hover:text-rose-500"
+                    ? "text-terra-500 font-medium"
+                    : "text-drift-600 hover:text-terra-500"
                 }`}
               >
                 {b.brand}
@@ -98,7 +98,7 @@ export default function FilterSidebar({ brands }: Props) {
 
         {/* Sort */}
         <div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-stone-400 mb-2.5">Sort</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-drift-400 mb-2.5">Sort</p>
           <div className="space-y-0.5">
             {SORT_OPTIONS.map(({ label, value }) => (
               <button
@@ -106,8 +106,8 @@ export default function FilterSidebar({ brands }: Props) {
                 onClick={() => setParam("sort", value)}
                 className={`block w-full text-left text-sm py-1.5 transition-colors ${
                   currentSort === value
-                    ? "text-rose-500 font-medium"
-                    : "text-stone-600 hover:text-rose-500"
+                    ? "text-terra-500 font-medium"
+                    : "text-drift-600 hover:text-terra-500"
                 }`}
               >
                 {label}

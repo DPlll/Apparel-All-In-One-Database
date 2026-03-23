@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <NavHeader />
         <main>{children}</main>
-        <footer className="mt-20 py-10 border-t border-sand-200 text-center text-xs text-stone-400 tracking-widest uppercase">
+        <footer className="mt-20 py-10 border-t border-vintage-200 text-center text-xs text-drift-400 tracking-widest uppercase">
           © 2026 Swim&amp;Co &nbsp;·&nbsp; All links are affiliate links.
         </footer>
       </body>

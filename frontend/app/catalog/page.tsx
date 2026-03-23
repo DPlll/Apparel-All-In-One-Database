@@ -44,20 +44,20 @@ export default async function CatalogPage({ searchParams }: PageProps) {
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-10">
-      <h1 className="font-serif text-3xl text-stone-900 mb-8">All Swimwear</h1>
+      <h1 className="font-serif text-3xl text-drift-900 mb-8">All Swimwear</h1>
       <div className="flex flex-col lg:flex-row gap-10">
         <FilterSidebar brands={brands} />
         <div className="flex-1">
           {items.length === 0 ? (
-            <div className="text-center py-24 text-stone-400">
+            <div className="text-center py-24 text-drift-400">
               <p className="font-serif text-xl mb-4">No products found.</p>
-              <Link href="/catalog" className="text-[11px] uppercase tracking-widest text-rose-400 hover:text-rose-600 transition-colors">
+              <Link href="/catalog" className="text-[11px] uppercase tracking-widest text-terra-400 hover:text-terra-600 transition-colors">
                 Clear filters
               </Link>
             </div>
           ) : (
             <>
-              <p className="text-[11px] uppercase tracking-widest text-stone-400 mb-6">{total} products</p>
+              <p className="text-[11px] uppercase tracking-widest text-drift-400 mb-6">{total} products</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-10">
                 {items.map((product) => (
                   <ProductCard key={product.id} product={product} />
@@ -66,13 +66,13 @@ export default async function CatalogPage({ searchParams }: PageProps) {
               {totalPages > 1 && (
                 <div className="mt-14 flex justify-center items-center gap-4">
                   {page > 1 && (
-                    <Link href={buildPageUrl(page - 1)} className="text-xs uppercase tracking-widest text-stone-500 hover:text-rose-500 transition-colors">
+                    <Link href={buildPageUrl(page - 1)} className="text-xs uppercase tracking-widest text-drift-600 hover:text-terra-500 transition-colors">
                       ← Prev
                     </Link>
                   )}
-                  <span className="text-xs text-stone-400">{page} / {totalPages}</span>
+                  <span className="text-xs text-drift-400">{page} / {totalPages}</span>
                   {page < totalPages && (
-                    <Link href={buildPageUrl(page + 1)} className="text-xs uppercase tracking-widest text-stone-500 hover:text-rose-500 transition-colors">
+                    <Link href={buildPageUrl(page + 1)} className="text-xs uppercase tracking-widest text-drift-600 hover:text-terra-500 transition-colors">
                       Next →
                     </Link>
                   )}

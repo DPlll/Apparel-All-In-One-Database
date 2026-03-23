@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Sand palette */
-  --color-sand-50:  #fdfcfa;
-  --color-sand-100: #f9f6f1;
-  --color-sand-200: #f2ede4;
-  --color-sand-300: #e5ddd0;
+  /* Vintage cream palette */
+  --color-vintage-50:  #FAF6EE;
+  --color-vintage-100: #F3EBD8;
+  --color-vintage-200: #E3D4B5;
+  --color-vintage-300: #CDB990;
 
-  /* Rose palette */
-  --color-rose-100: #fdf0ee;
-  --color-rose-200: #f9dbd7;
-  --color-rose-400: #e8a99f;
-  --color-rose-500: #d97e73;
-  --color-rose-600: #c4675b;
+  /* Terracotta palette */
+  --color-terra-100: #FCE8DF;
+  --color-terra-200: #F4C5AF;
+  --color-terra-400: #D4724A;
+  --color-terra-500: #B85835;
+  --color-terra-600: #8F4226;
 
-  /* Stone palette */
-  --color-stone-400: #a09080;
-  --color-stone-600: #6b5d52;
-  --color-stone-900: #2c201a;
+  /* Drift (warm brown) palette */
+  --color-drift-400: #9B8870;
+  --color-drift-600: #5E4A38;
+  --color-drift-900: #271811;
 
   /* Font families */
   --font-sans:  var(--font-inter, system-ui, sans-serif);
@@ -26,8 +26,8 @@
 
 @layer base {
   body {
-    background-color: theme(--color-sand-50);
-    color: theme(--color-stone-900);
+    background-color: theme(--color-vintage-50);
+    color: theme(--color-drift-900);
     -webkit-font-smoothing: antialiased;
   }
   h1, h2, h3 {

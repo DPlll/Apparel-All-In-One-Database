@@ -42,7 +42,7 @@ export default function ShopButton({ productId, brandName }: Props) {
       <button
         onClick={handleClick}
         disabled={loading}
-        className="w-full py-3.5 border border-stone-900 text-stone-900 text-xs tracking-[0.2em] uppercase hover:bg-stone-900 hover:text-white transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-3.5 bg-terra-500 text-vintage-50 text-xs tracking-[0.2em] uppercase hover:bg-terra-600 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-sm"
       >
         {loading ? "Opening…" : `Shop at ${brandName}`}
       </button>
